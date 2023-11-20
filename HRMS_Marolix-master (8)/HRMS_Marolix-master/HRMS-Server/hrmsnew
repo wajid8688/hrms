@@ -1,0 +1,11 @@
+pipeline
+{ 
+  agent any 
+  stages{
+    stage("intigration"){
+      steps{
+      git 'https://github.com/wajid8688/hrms.git'
+  }
+    }
+  }
+  } 
