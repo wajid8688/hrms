@@ -4,7 +4,7 @@ pipeline
   stages{
     stage("intigration"){
       steps{
-      git 'https://github.com/wajid8688/hrms.git'
+      git branch: 'main', url: 'https://github.com/wajid8688/hrms.git'
   }
     }
   }
