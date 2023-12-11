@@ -1,27 +1,77 @@
-# Use an official Node.js runtime as a parent image
-FROM node:latest
+pipeline {
+agent any 
 
-RUN apt-get update && apt-get install -y build-essential
-RUN apt-get install -y libpq-dev
+    environment {
+        PATH = "/path/to/pyenv/bin:${env.PATH}"
+        SHELL = '/bin/bash' // or '/bin/sh' depending on your shell
+    }
 
-# Set the working directory in the container
-WORKDIR /usr/src/app/
 
 
-# Copy the rest of the application code to the working directory
-COPY . .
 
-# Copy package.json and package-lock.json to the working directory
-COPY package*.json ./
 
-# Install Angular CLI globally
-RUN npm install -g @angular/cli
 
-# Install app dependencies
-RUN npm install
 
-# Expose the port your app runs on
-EXPOSE 4200
+stages{
 
-# Start the application
-CMD ["ng", "serve", "--host", "0.0.0.0"]
+
+stage("intigration"){
+
+steps{
+git branch: 'main', url: 'https://github.com/R807989/hrmsnew.git'
+
+}
+
+}
+
+
+  
+
+ 
+           stage('install python depencies') {
+            steps {
+                script {
+                    // Install dependencies using Pipenv
+                    sh 'pipenv install --dev'
+                }
+            }
+        }
+
+ 
+
+ stage('Build Docker Image') {
+            steps {
+        dir("/var/lib/jenkins/workspace/python/HRMS-Server") {
+
+                script {
+                    // Build Docker image
+                   
+sh 'docker build -t python .'
+                }
+            }
+        }
+}
+ stage('deploy') {
+            steps {
+                script {
+                    // Run Docker container with environment variables
+                    sh 'docker run --name my-python-container -d -p 8000:8000 -e EMAIL_HOST_USER=myuser -e OTHER_VARIABLE=value python'
+                }
+            }
+        }
+           
+
+            
+        
+    
+
+
+
+
+
+}
+}
+
+
+GitHub - R807989/hrmsnew
+https://github.com
